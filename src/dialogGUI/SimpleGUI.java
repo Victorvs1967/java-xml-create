@@ -2,7 +2,6 @@ package dialogGUI;
 
 import java.awt.*;
 import javax.swing.*;
-
 import java.awt.event.*;
 
 import service.CreateXML;
@@ -11,11 +10,8 @@ public class SimpleGUI extends JFrame {
   
   private JButton button = new JButton("Create");
   private JTextField input = new JTextField("DDMMYY", 15);
-  private JLabel spacer = new JLabel("\n");
+  private JLabel spacer = new JLabel("");
   private JLabel label = new JLabel("\t\tDate for first edition:");
-  // private JRadioButton radio1 = new JRadioButton("Select one");
-  // private JRadioButton radio2 = new JRadioButton("Select two");
-  // private JCheckBox check = new JCheckBox("Check", false);
 
   public SimpleGUI() {
     super("Create XML files for editions");
@@ -29,14 +25,6 @@ public class SimpleGUI extends JFrame {
     container.add(input);
     container.add(spacer);
 
-    // ButtonGroup group = new ButtonGroup();
-    // group.add(radio1);
-    // group.add(radio2);
-    // container.add(radio1);
-    // container.add(radio2);
-    // radio1.setSelected(true);
-
-    // container.add(check);
     button.addActionListener(new ButtonEventListener());
     container.add(button);
   }
@@ -50,8 +38,7 @@ public class SimpleGUI extends JFrame {
         e.printStackTrace();
       }
 
-      String message = "xml created...";
-      JOptionPane.showMessageDialog(null, message, "Output", JOptionPane.INFORMATION_MESSAGE);
+      JOptionPane.showMessageDialog(null, "xml created...", "Finishing", JOptionPane.INFORMATION_MESSAGE);
     }
   }
 }

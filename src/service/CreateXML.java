@@ -14,8 +14,8 @@ import org.w3c.dom.Element;
 
 public class CreateXML {
   
-  static String[] base_editions_array = {"BUF", "SEC", "DNE", "ODS", "KHA", "UKR", "KIE"};
-  static String[] sections = {"FST", "STR", "STR", "STR", "STR", "STR", "STR", "STR", "STR", "STR", "STR", "STR", "STR", "STR", "STR", "LST", "OBU", "RBT", "SEM", "SIT", "TCH", "TOP", "ZDR", "STR", "STR"};
+  static String[] BASE_EDITIONS_ARRAY = {"BUF", "SEC", "DNE", "ODS", "KHA", "UKR", "KIE"};
+  static String[] SECTIONS = {"FST", "STR", "STR", "STR", "STR", "STR", "STR", "STR", "STR", "STR", "STR", "STR", "STR", "STR", "STR", "LST", "OBU", "RBT", "SEM", "SIT", "TCH", "TOP", "ZDR", "STR", "STR"};
 
   public static void create(String startDate) throws Exception {
     
@@ -64,7 +64,7 @@ public class CreateXML {
 
     int n = 0;
 
-    for (String edit : base_editions_array) {
+    for (String edit : BASE_EDITIONS_ARRAY) {
 
       switch (edit) {
         case "BUF":
@@ -113,11 +113,11 @@ public class CreateXML {
         page.appendChild(unique_id);
 
         Element modifier = doc.createElement("modifier");
-        modifier.appendChild(doc.createTextNode("00"));
+        modifier.appendChild(doc.createTextNode("OO"));
         page.appendChild(modifier);
 
         Element section = doc.createElement("section");
-        section.appendChild(doc.createTextNode(edit == "BUF" ? edit : sections[k - 1]));
+        section.appendChild(doc.createTextNode(edit == "BUF" ? edit : SECTIONS[k - 1]));
         page.appendChild(section);
 
         Element dps = doc.createElement("dps");
