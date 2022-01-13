@@ -1,6 +1,8 @@
 package service;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -14,22 +16,28 @@ import org.w3c.dom.Element;
 
 public class CreateXML {
   
-  static String[] BASE_EDITIONS_ARRAY = {"BUF", "SEC", "DNE", "ODS", "KHA", "UKR", "KIE"};
+  static List<String>  BASE_EDITIONS_ARRAY = Arrays.asList(new String[] {"BUF", "SEC", "DNE", "ODS", "KHA", "UKR", "KIE"});
   static String[] SECTIONS = {"FST", "STR", "STR", "STR", "STR", "STR", "STR", "STR", "STR", "STR", "STR", "STR", "STR", "STR", "STR", "LST", "OBU", "RBT", "SEM", "SIT", "TCH", "TOP", "ZDR", "STR", "STR"};
 
   public static void create(String startDate) throws Exception {
     
-    String date = startDate;
-    Integer day = Integer.parseInt(date.substring(0, 2));
-    Integer[] days = {1, 3, 4};
+    List<Integer> days = Arrays.asList(new Integer[] {1, 3, 4});
 
-    for (int i : days) {
+    days.stream().forEach(i -> {
+
+      String date = startDate;
+      Integer day = Integer.parseInt(date.substring(0, 2));
+
       date = day < 10 ? "0".concat(String.valueOf(day)).concat(date.substring(2)) : String.valueOf(day).concat(date.substring(2));
       String filename = "VST_20".concat(date.substring(4)).concat("_").concat(date.substring(2, 4)).concat("_").concat(date.substring(0, 2)).concat(".xml");
-      writelXml(createDoc(date), filename);
-      day += i == 1 ? 2 : 1;
-    }
 
+      try {
+        writelXml(createDoc(date), filename);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+      day += i == 1 ? 2 : 1;
+    });
 
   }
 
@@ -39,44 +47,34 @@ public class CreateXML {
     factory.setNamespaceAware(true);
 
     Document doc = factory.newDocumentBuilder().newDocument();
-
     Element root = doc.createElement("publication_plan");
-    doc.appendChild(root);
-
     Element unit = doc.createElement("unit");
+    Element publication = doc.createElement("publication");
+    Element edition = doc.createElement("edition");
+    Element pubdate = doc.createElement("pubdate");
+    Element pages = doc.createElement("pages");
+
+    doc.appendChild(root);
     unit.appendChild(doc.createTextNode("mm"));
     root.appendChild(unit);
-
-    Element publication = doc.createElement("publication");
     publication.appendChild(doc.createTextNode("ВЕСТИ"));
     root.appendChild(publication);
-
-    Element edition = doc.createElement("edition");
     edition.appendChild(doc.createTextNode("VST"));
     root.appendChild(edition);
-
-    Element pubdate = doc.createElement("pubdate");
     pubdate.appendChild(doc.createTextNode(date));
     root.appendChild(pubdate);
-
-    Element pages = doc.createElement("pages");
     pages.appendChild(doc.createTextNode("105"));
     root.appendChild(pages);
 
-    int n = 0;
 
-    for (String edit : BASE_EDITIONS_ARRAY) {
+    BASE_EDITIONS_ARRAY.stream().forEach(edit -> {
+
+      int n = 0;
 
       switch (edit) {
-        case "BUF":
-          n = 20;
-          break;
-        case "SEC":
-          n = 25;
-          break;
-        default:
-          n = 16;
-          break;
+        case "BUF": n = 20; break;
+        case "SEC": n = 25; break;
+        default: n = 16; break;
       }
 
       for (int k = 1; k <= n; k++) {
@@ -85,47 +83,39 @@ public class CreateXML {
         root.appendChild(page);
 
         Element physical_page_number = doc.createElement("physical_page_number");
+        Element logical_page_number = doc.createElement("logical_page_number");
+        Element base_editions = doc.createElement("base_editions");
+        Element height = doc.createElement("height");
+        Element width = doc.createElement("width");
+        Element colour = doc.createElement("colour");
+        Element unique_id = doc.createElement("unique_id");
+        Element modifier = doc.createElement("modifier");
+        Element section = doc.createElement("section");
+        Element dps = doc.createElement("dps");
+        String id = "ВЕСТИ_".concat(edit).concat("_").concat(date).concat("_").concat(String.valueOf(k));
+
         physical_page_number.appendChild(doc.createTextNode(String.valueOf(k)));
         page.appendChild(physical_page_number);
-
-        Element logical_page_number = doc.createElement("logical_page_number");
         logical_page_number.appendChild(doc.createTextNode(String.valueOf(k)));
         page.appendChild(logical_page_number);
-
-        Element base_editions = doc.createElement("base_editions");
         base_editions.appendChild(doc.createTextNode(edit));
         page.appendChild(base_editions);
-
-        Element height = doc.createElement("height");
         height.appendChild(doc.createTextNode("375"));
         page.appendChild(height);
-
-        Element width = doc.createElement("width");
         width.appendChild(doc.createTextNode("259"));
         page.appendChild(width);
-
-        Element colour = doc.createElement("colour");
         colour.appendChild(doc.createTextNode("4"));
         page.appendChild(colour);
-
-        String id = "ВЕСТИ_".concat(edit).concat("_").concat(date).concat("_").concat(String.valueOf(k));
-        Element unique_id = doc.createElement("unique_id");
         unique_id.appendChild(doc.createTextNode(id));
         page.appendChild(unique_id);
-
-        Element modifier = doc.createElement("modifier");
         modifier.appendChild(doc.createTextNode("OO"));
         page.appendChild(modifier);
-
-        Element section = doc.createElement("section");
         section.appendChild(doc.createTextNode(edit == "BUF" ? edit : SECTIONS[k - 1]));
         page.appendChild(section);
-
-        Element dps = doc.createElement("dps");
         dps.appendChild(doc.createTextNode("0"));
         page.appendChild(dps);        
       }
-    }
+    });
 
     return doc;
   }
