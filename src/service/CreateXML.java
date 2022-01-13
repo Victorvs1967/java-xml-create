@@ -20,8 +20,8 @@ public class CreateXML {
   public static void create(String startDate) throws Exception {
     
     String date = startDate;
-    int day = Integer.parseInt(date.substring(0, 2));
-    int[] days = {1, 3, 4};
+    Integer day = Integer.parseInt(date.substring(0, 2));
+    Integer[] days = {1, 3, 4};
 
     for (int i : days) {
       date = day < 10 ? "0".concat(String.valueOf(day)).concat(date.substring(2)) : String.valueOf(day).concat(date.substring(2));
@@ -29,6 +29,7 @@ public class CreateXML {
       writelXml(createDoc(date), filename);
       day += i == 1 ? 2 : 1;
     }
+
 
   }
 
