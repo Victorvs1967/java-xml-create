@@ -14,15 +14,17 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import model.Const;
+
+
 public class CreateXML {
   
-  static List<String>  BASE_EDITIONS_ARRAY = Arrays.asList(new String[] {"BUF", "SEC", "DNE", "ODS", "KHA", "UKR", "KIE"});
-  static String[] SECTIONS = {"FST", "STR", "STR", "STR", "STR", "STR", "STR", "STR", "STR", "STR", "STR", "STR", "STR", "STR", "STR", "LST", "OBU", "RBT", "SEM", "SIT", "TCH", "TOP", "ZDR", "STR", "STR"};
+  static List<String>  base_editions_array = Arrays.asList(Const.BASE_EDITIONS_ARRAY);
+  static String[] sections = Const.SECTIONS;
+  static List<Integer> days = Arrays.asList(Const.DAYS);
 
   public static void create(String startDate) throws Exception {
     
-    List<Integer> days = Arrays.asList(new Integer[] {1, 3, 4});
-
     days.stream().forEach(i -> {
 
       String date = startDate;
@@ -67,7 +69,7 @@ public class CreateXML {
     root.appendChild(pages);
 
 
-    BASE_EDITIONS_ARRAY.stream().forEach(edit -> {
+    base_editions_array.stream().forEach(edit -> {
 
       int n = 0;
 
@@ -110,7 +112,7 @@ public class CreateXML {
         page.appendChild(unique_id);
         modifier.appendChild(doc.createTextNode("OO"));
         page.appendChild(modifier);
-        section.appendChild(doc.createTextNode(edit == "BUF" ? edit : SECTIONS[k - 1]));
+        section.appendChild(doc.createTextNode(edit == "BUF" ? edit : sections[k - 1]));
         page.appendChild(section);
         dps.appendChild(doc.createTextNode("0"));
         page.appendChild(dps);        
