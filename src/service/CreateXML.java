@@ -16,7 +16,6 @@ import org.w3c.dom.Element;
 
 import model.Const;
 
-
 public class CreateXML {
   
   static List<String>  base_editions_array = Arrays.asList(Const.BASE_EDITIONS_ARRAY);
